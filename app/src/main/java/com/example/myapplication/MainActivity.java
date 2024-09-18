@@ -13,46 +13,34 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends AppCompatActivity {
-private Button start,stop;
 private TextView zero;
-    boolean m;
-    int z;
+    int counter=0;
+    Thread counterThread;
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        zero=findViewById(R.id.textView);
-        start=findViewById(R.id.start);
-        start.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                m = true;
-                z = 0;
-                try {
-                    while (m == true) {
-                        Thread.sleep(1000);
-                        z++;
-                        zero.setText(String.valueOf(z).toString());
+      zero=findViewById(R.id.textView);
+    }
 
-
-                    catch(InterruptedException e){
-                            throw new RuntimeException(e);
-                        }
+    public void STARTCOUNT (View view){
+        counterThread=new Thread(()->{
+            try {
+                while (true){
+                    counter++;
+                    zero.setText(String.valueOf(counter).toString());
+                    Thread.sleep(1000);
                 }
             }
-        });
-        stop=findViewById(R.id.stop);
-        stop.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                m=false;
-
-
+            catch (InterruptedException e){
 
             }
         });
+        counterThread.start();
+    }
 
-
+    public void stopCount(View view){
+        counterThread.interrupt();
     }
     }
